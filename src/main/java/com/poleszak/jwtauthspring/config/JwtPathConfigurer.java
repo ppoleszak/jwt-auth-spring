@@ -1,7 +1,7 @@
 package com.poleszak.jwtauthspring.config;
 
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 
 public interface JwtPathConfigurer {
-    void configure(HttpSecurity http) throws Exception;
+    void configure(ServerHttpSecurity http);
 }

@@ -2,7 +2,6 @@ package com.poleszak.jwtauthspring.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +18,15 @@ import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
 @Service
 public class JwtService {
 
-//    @Value("${jwt.secret-key}")
+    private final Key signInKey;
+
+    //    @Value("${jwt.secret-key}")
     private final String secretKey = "2646294A404E635266556A586E327234753778214125442A472D4B6150645367566B59703373367638792F423F4528482B4D6251655468576D5A713474377721";
+
+    public JwtService() {
+        byte[] keyBytes = BASE64.decode(secretKey);
+        this.signInKey = hmacShaKeyFor(keyBytes);
+    }
 
     public String extractUsername(String jwtToken) {
         return extractClaim(jwtToken, Claims::getSubject);
@@ -42,7 +48,7 @@ public class JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-                .signWith(getSignInKey(), HS512)
+                .signWith(signInKey, HS512)
                 .compact();
     }
 
@@ -62,15 +68,9 @@ public class JwtService {
     private Claims extractClaims(String jwtToken) {
         return Jwts
                 .parserBuilder()
-                .setSigningKey(getSignInKey())
+                .setSigningKey(signInKey)
                 .build()
                 .parseClaimsJws(jwtToken)
                 .getBody();
-    }
-
-    @PostConstruct
-    private Key getSignInKey() {
-        byte[] keyBytes = BASE64.decode(secretKey);
-        return hmacShaKeyFor(keyBytes);
     }
 }
