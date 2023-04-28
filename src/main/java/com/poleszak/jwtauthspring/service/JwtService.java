@@ -18,13 +18,11 @@ import static io.jsonwebtoken.security.Keys.hmacShaKeyFor;
 @Service
 public class JwtService {
 
+    private static final String SECRET_KEY = "2646294A404E635266556A586E327234753778214125442A472D4B6150645367566B59703373367638792F423F4528482B4D6251655468576D5A713474377721";
     private final Key signInKey;
 
-    //    @Value("${jwt.secret-key}")
-    private final String secretKey = "2646294A404E635266556A586E327234753778214125442A472D4B6150645367566B59703373367638792F423F4528482B4D6251655468576D5A713474377721";
-
     public JwtService() {
-        byte[] keyBytes = BASE64.decode(secretKey);
+        byte[] keyBytes = BASE64.decode(SECRET_KEY);
         this.signInKey = hmacShaKeyFor(keyBytes);
     }
 
