@@ -1,7 +1,7 @@
 package com.poleszak.jwtauthspring.filter;
 
 import com.poleszak.jwtauthspring.service.JwtService;
-import com.poleszak.jwtauthspring.service.UserDetailsService;
+import com.poleszak.jwtauthspring.service.UserDetailsProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTH_HEADER_PREFIX = "Bearer ";
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsProvider userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
